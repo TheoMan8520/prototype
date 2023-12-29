@@ -24,7 +24,7 @@ const Calendar = () => {
   const [monthLabel, setMonthLabel] = useState(monthsLabel[month]);
   const [year, setYear] = useState(date.getFullYear());
 
-  const [days, setDays] = useState<number[]>([])
+  const [days, setDays] = useState<number[]>([]);
 
   useEffect(() => {
     constructCalendar();

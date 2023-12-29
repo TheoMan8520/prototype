@@ -9,7 +9,7 @@ interface Props {
 const MainPage = ({children}: Props) => {
   return (
     <div className="page">
-        <Header text="Weekly"/>
+        <Header text="WEEKLY"/>
         <div className="working-frame">
             <div className="left-body-section"></div>
             <div className="middle-body-section">

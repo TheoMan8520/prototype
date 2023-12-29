@@ -24,24 +24,29 @@ const Calendar = () => {
   const [monthLabel, setMonthLabel] = useState(monthsLabel[month]);
   const [year, setYear] = useState(date.getFullYear());
 
+  const [daysInMonth, setDaysInMonth] = useState(
+    new Date(year, month + 1, 0).getDate()
+  );
+  const [firstDay, setFirstDay] = useState(new Date(year, month, 1).getDay());
   const [days, setDays] = useState<number[]>([]);
+  const [style, setStyle] = useState("calendar");
 
   useEffect(() => {
     constructCalendar();
   });
 
   const constructCalendar = () => {
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const dayOfWeek = date.getDay();
-    const exDays = daysInMonth + dayOfWeek - 35
+    setDaysInMonth(new Date(year, month + 1, 0).getDate());
+    setFirstDay(new Date(year, month, 1).getDay());
+    const exDays = daysInMonth + firstDay - 35;
 
     const daysTemp: number[] = [];
     let dayIndex = 1;
     let dayNextMonthIndex = 1;
-    let dayLastMonthIndex = new Date(year, month, 0).getDate() - dayOfWeek + 1;
+    let dayLastMonthIndex = new Date(year, month, 0).getDate() - firstDay + 1;
 
     for (let i = 0; i <= 34; i++) {
-      if (i < dayOfWeek) {
+      if (i < firstDay) {
         daysTemp.push(dayLastMonthIndex);
         dayLastMonthIndex += 1;
       } else if (dayIndex > daysInMonth) {
@@ -54,10 +59,18 @@ const Calendar = () => {
     }
 
     if (exDays > 0) {
-      for (let i = 0; i < exDays; i++) {
-        daysTemp[i] = dayIndex;
-        dayIndex += 1;
-      }
+        setStyle("calendar-42");
+        for (let i = 35; i <= 41; i++) {
+            if (i < exDays+35) {
+                daysTemp.push(dayIndex);
+                dayIndex += 1;
+            } else {
+                daysTemp.push(dayNextMonthIndex);
+                dayNextMonthIndex += 1;
+            }
+        }
+    } else {
+        setStyle("calendar");
     }
 
     setDays(daysTemp);
@@ -72,14 +85,9 @@ const Calendar = () => {
   };
 
   const getDayStyle = (index: number) => {
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
-    const dayOfWeek = date.getDay();
-    const exDays = daysInMonth + dayOfWeek - 35
-    if (index < exDays) {
-      return "calendar-day";
-    } else if (index < dayOfWeek) {
+    if (index < firstDay) {
       return "calendar-day before";
-    } else if (index > dayOfWeek + daysInMonth - 1) {
+    } else if (index > firstDay + daysInMonth - 1) {
       return "calendar-day after";
     } else {
       return "calendar-day";
@@ -98,7 +106,7 @@ const Calendar = () => {
       <div className="calendar-month">
         <h1>{monthLabel}</h1>
       </div>
-      <div className="calendar">
+      <div className={style}>
         <div className="calendar-header-day">
           <h1>SUN</h1>
         </div>

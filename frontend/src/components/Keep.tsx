@@ -58,6 +58,12 @@ const Calendar = () => {
       }
     }
 
+    // if (exDays > 0) {
+    //   for (let i = 0; i < exDays; i++) {
+    //     daysTemp[i] = dayIndex;
+    //     dayIndex += 1;
+    //   }
+    // }
     if (exDays > 0) {
         for (let i = 34; i <= 40; i++) {
             if (i < exDays+34) {

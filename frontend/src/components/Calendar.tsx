@@ -20,9 +20,9 @@ const Calendar = () => {
   ];
 
   const [date, setDate] = useState(new Date());
-  const [month, setMonth] = useState(date.getMonth);
+  const [month, setMonth] = useState(date.getMonth());
   const [monthLabel, setMonthLabel] = useState(monthsLabel[month]);
-  const [year, setYear] = useState(date.getFullYear);
+  const [year, setYear] = useState(date.getFullYear());
 
   const [days, setDays] = useState<number[]>([])
 
@@ -36,7 +36,7 @@ const Calendar = () => {
     const daysTemp: number[] = [];
     let dayIndex = 1;
     let dayNextMonthIndex = 1;
-    let dayLastMonthIndex = new Date(year, month, 0).getDate() - dayOfWeek;
+    let dayLastMonthIndex = new Date(year, month, 0).getDate() - dayOfWeek + 1;
 
     for (let i = 0; i <= 34; i++) {
       if (i < dayOfWeek) {
@@ -54,7 +54,7 @@ const Calendar = () => {
     setDays(daysTemp);
   };
 
-    const handleDateChange = (selectedDate) => {
+    const handleDateChange = (selectedDate: never) => {
         setDate(selectedDate);
         const day = new Date(selectedDate);
         setMonth(day.getMonth());

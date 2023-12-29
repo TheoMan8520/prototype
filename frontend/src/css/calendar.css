@@ -27,9 +27,11 @@
 
 .calendar-header-day {
     border-bottom: solid 0.1vw #929292;
-    z-index: 1;
 }
 
+.calendar-day {
+    z-index: 0;
+}
 
 .calendar-header-day h1, .calendar-day h1 {
     font-size: 3vh;

@@ -1,0 +1,39 @@
+.page {
+  height: 100vh;
+  width: 100vw;
+
+  display: flex;
+  flex-direction: column;
+  background: #f5f5f5;
+}
+
+.working-frame {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex: 1 0 0;
+  align-self: stretch;
+
+  height: 100%;
+}
+
+.left-body-section,
+.right-body-section {
+  display: flex;
+  width: 6.94vw;
+  padding: 4.86vh 0.69vw;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.97vh;
+  align-self: stretch;
+}
+
+.middle-body-section {
+  display: flex;
+  padding-top: 4.86vh;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.97vh;
+  flex: 1 0 0;
+  align-self: stretch;
+}

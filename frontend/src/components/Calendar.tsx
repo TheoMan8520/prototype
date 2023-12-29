@@ -31,8 +31,10 @@ const Calendar = () => {
   });
 
   const constructCalendar = () => {
-    const daysInMonth = new Date(year, month+1, 0).getDate();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
     const dayOfWeek = date.getDay();
+    const exDays = daysInMonth + dayOfWeek - 35
+
     const daysTemp: number[] = [];
     let dayIndex = 1;
     let dayNextMonthIndex = 1;
@@ -51,21 +53,44 @@ const Calendar = () => {
       }
     }
 
+    if (exDays > 0) {
+      for (let i = 0; i < exDays; i++) {
+        daysTemp[i] = dayIndex;
+        dayIndex += 1;
+      }
+    }
+
     setDays(daysTemp);
   };
 
-    const handleDateChange = (selectedDate: never) => {
-        setDate(selectedDate);
-        const day = new Date(selectedDate);
-        setMonth(day.getMonth());
-        setMonthLabel(monthsLabel[day.getMonth()]);
-        setYear(day.getFullYear());
-      };
+  const handleDateChange = (selectedDate: never) => {
+    setDate(selectedDate);
+    const day = new Date(selectedDate);
+    setMonth(day.getMonth());
+    setMonthLabel(monthsLabel[day.getMonth()]);
+    setYear(day.getFullYear());
+  };
+
+  const getDayStyle = (index: number) => {
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const dayOfWeek = date.getDay();
+    const exDays = daysInMonth + dayOfWeek - 35
+    if (index < exDays) {
+      return "calendar-day";
+    } else if (index < dayOfWeek) {
+      return "calendar-day before";
+    } else if (index > dayOfWeek + daysInMonth - 1) {
+      return "calendar-day after";
+    } else {
+      return "calendar-day";
+    }
+  };
 
   return (
     <>
       <DatePicker
         selected={date}
+        showIcon
         onChange={handleDateChange}
         dateFormat="MM/yyyy"
         showMonthYearPicker
@@ -96,8 +121,8 @@ const Calendar = () => {
           <h1>SAT</h1>
         </div>
         {days.length > 0
-          ? days.map((day) => (
-              <div className="calendar-day" key={day}>
+          ? days.map((day, index) => (
+              <div key={index} className={getDayStyle(index)}>
                 <h1>{day}</h1>
               </div>
             ))

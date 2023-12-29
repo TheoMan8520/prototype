@@ -1,4 +1,4 @@
-.calendar {
+.calendar, .calendar-42 {
     display: grid;
     
     grid-template-columns: 6.94vw 6.94vw 6.94vw 6.94vw 6.94vw 6.94vw 6.94vw;
@@ -11,6 +11,10 @@
     border-top: solid 0.2vw #929292;
     border-bottom: solid 0.2vw #929292;
     background: #FFF;
+}
+
+.calendar-42 {
+    grid-template-rows: 4vw 6.94vw 6.94vw 6.94vw 6.94vw 6.94vw 6.94vw;
 }
 
 .calendar-header-day, .calendar-day {
@@ -38,4 +42,8 @@
     align-self: center;
 
     margin: 0;
+}
+
+.calendar-day.before, .calendar-day.calendar-day.after {
+    color: #C9C9C9;
 }

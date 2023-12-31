@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { Link } from "react-router-dom";
 import "../css/calendar.css";
 
 const Calendar = () => {
@@ -59,18 +60,18 @@ const Calendar = () => {
     }
 
     if (exDays > 0) {
-        setStyle("calendar-42");
-        for (let i = 35; i <= 41; i++) {
-            if (i < exDays+35) {
-                daysTemp.push(dayIndex);
-                dayIndex += 1;
-            } else {
-                daysTemp.push(dayNextMonthIndex);
-                dayNextMonthIndex += 1;
-            }
+      setStyle("calendar-42");
+      for (let i = 35; i <= 41; i++) {
+        if (i < exDays + 35) {
+          daysTemp.push(dayIndex);
+          dayIndex += 1;
+        } else {
+          daysTemp.push(dayNextMonthIndex);
+          dayNextMonthIndex += 1;
         }
+      }
     } else {
-        setStyle("calendar");
+      setStyle("calendar");
     }
 
     setDays(daysTemp);
@@ -94,17 +95,46 @@ const Calendar = () => {
     }
   };
 
+  const sentTo = (index: number, day: number) => {
+    const to = `/day/${index}/${day}/`;
+    if (index < firstDay) {
+        if(month == 0){
+            return to+`12`;
+        } else {
+            return to+`${month}`;
+        }
+      } else if (index > firstDay + daysInMonth - 1) {
+        if (month == 11) {
+            return to+`1`;
+        } else {
+            return to+`${month+2}`;
+        }
+      } else {
+        return to+`${month+1}`;
+      }
+  };
+
   return (
     <>
-      <DatePicker
-        selected={date}
-        showIcon
-        onChange={handleDateChange}
-        dateFormat="MM/yyyy"
-        showMonthYearPicker
-      />
       <div className="calendar-month">
-        <h1>{monthLabel}</h1>
+        <div className="adjust-month-left"></div>
+        <div className="calendar-month-middle">
+          <h1>{monthLabel}</h1>
+        </div>
+        <div className="adjust-month-right"></div>
+        <div className="calendar-month-right">
+          <DatePicker
+            selected={date}
+            onChange={handleDateChange}
+            dateFormat="MM/yyyy"
+            showMonthYearPicker
+            customInput={
+              <div className="date-picker">
+                <h1>M</h1>
+              </div>
+            }
+          />
+        </div>
       </div>
       <div className={style}>
         <div className="calendar-header-day">
@@ -130,9 +160,9 @@ const Calendar = () => {
         </div>
         {days.length > 0
           ? days.map((day, index) => (
-              <div key={index} className={getDayStyle(index)}>
+              <Link to={sentTo(index, day)} key={index} className={getDayStyle(index)}>
                 <h1>{day}</h1>
-              </div>
+              </Link>
             ))
           : null}
       </div>

@@ -17,6 +17,71 @@
     grid-template-rows: 4vw 6.94vw 6.94vw 6.94vw 6.94vw 6.94vw 6.94vw;
 }
 
+.calendar-month {
+    display: flex;
+    flex-direction: row;
+    width: 48.61vw;
+
+    justify-content: center;
+    /* background-color: blue; */
+}
+
+.date-picker {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2vw;
+    height: 2vw;
+
+    border-radius: 2vw;
+    outline: solid 0.1vw;
+    outline-color: #C9C9C9;
+    cursor: pointer;
+    /* background-color: blue; */
+}
+
+.date-picker h1 {
+    width: fit-content;
+    font-size: 2vh;
+    margin-top: 2.6vh;
+    font-weight: 600;
+    margin: 0;
+
+    /* background-color: red; */
+}
+
+.adjust-month-left, .adjust-month-right {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* background-color: blue; */
+}
+
+.adjust-month-left {
+    width: 20%;
+}
+.adjust-month-right {
+    width: 10%;
+}
+
+.calendar-month-middle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 60%;
+    /* background-color: red; */
+}
+
+.calendar-month-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    width: 10%;
+    /* background-color: red; */
+}
+
 .calendar-header-day, .calendar-day {
     display: flex;
     flex-direction: column;
@@ -26,6 +91,8 @@
 
     outline: solid 0.01vw;
     outline-color: #C9C9C9;
+    text-decoration: none;
+    color: #333;
     /* background-color: beige; */
 }
 
@@ -37,6 +104,16 @@
     z-index: 0;
 }
 
+.calendar-day:hover {
+    background: #EBEBE1;
+}
+
+.calendar-day:active {
+    background: #707070;
+    color:#EBEBE1;
+}
+
+
 .calendar-header-day h1, .calendar-day h1 {
     font-size: 3vh;
     align-self: center;
@@ -47,3 +124,4 @@
 .calendar-day.before, .calendar-day.calendar-day.after {
     color: #C9C9C9;
 }
+

@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('stckslots', function (Blueprint $table) {
+        Schema::table('sticker-slots', function (Blueprint $table) {
             $table->foreignId('category_id')
                 ->constrained('categories');
-            $table->foreignId('day_id')
-                ->constrained('days')
-                ->onDelete('cascade');
         });
     }
 
@@ -25,11 +22,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('stckslots', function (Blueprint $table) {
+        Schema::table('sticker-slots', function (Blueprint $table) {
             $table->dropForeign(['category_id']);
             $table->dropColumn('category_id');
-            $table->dropForeign(['day_id']);
-            $table->dropColumn('day_id');
         });
     }
 };

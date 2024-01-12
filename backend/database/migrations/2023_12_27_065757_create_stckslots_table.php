@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('stckslots', function (Blueprint $table) {
+        Schema::create('sticker-slots', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->integer('slot');
+            $table->timestamps();
         });
     }
 
@@ -22,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stckslots');
+        Schema::dropIfExists('sticker-slots');
     }
 };

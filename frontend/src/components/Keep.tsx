@@ -1,159 +1,290 @@
-import { useEffect, useState } from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import "../css/calendar.css";
+// import axios from "axios";
+// import { useState } from "react";
+// import Modal from "react-modal";
+// import Swal from "sweetalert2";
+// import "../css/create-record.css";
 
-const Calendar = () => {
-  const monthsLabel = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
+// interface Props {
+//   isOpen: boolean;
+//   onRequestClose: () => void;
+//   date: number;
+//   month: number;
+//   year: number;
+// }
 
-  const [date, setDate] = useState(new Date());
-  const [month, setMonth] = useState(date.getMonth());
-  const [monthLabel, setMonthLabel] = useState(monthsLabel[month]);
-  const [year, setYear] = useState(date.getFullYear());
-  const [daysInMonth, setDaysInMonth] = useState(
-    new Date(year, month + 1, 0).getDate()
-  );
-  const [dayOfWeek, setDayOfWeek] = useState(date.getDay());
-  const [exDays, setExDays] = useState(daysInMonth + dayOfWeek - 35);
+// const CreateRecord = ({ isOpen, onRequestClose, date, month, year }: Props) => {
+//   const customStyles = {
+//     overlay: {
+//       backgroundColor: "rgba(0, 0, 0, 0.5)",
+//     },
+//     content: {
+//       top: "50%",
+//       left: "50%",
+//       right: "auto",
+//       bottom: "auto",
+//       marginRight: "-50%",
+//       transform: "translate(-50%, -50%)",
+//       border: "",
+//       background: "#F5F5F5",
+//       borderRadius: "40px", // Set border radius for rounded corners
+//       width: "100%", // Set the width of the modal
+//       maxWidth: "700px", // Set the maximum width
+//     },
+//   };
 
-  const [days, setDays] = useState<number[]>([]);
+//   const [content, setContent] = useState("");
+//   const [sticker, setSticker] = useState("🌞");
+//   const [category, setCategory] = useState("");
+//   const [preset, setPreset] = useState("");
 
-  const [style, setStyle] = useState("calendar");
+//   const createRecord = async (e) => {
+//     e.preventDefault();
+//     const formData = new FormData();
+//     formData.append("content", content);
+//     formData.append("day", date);
+//     formData.append("month", month);
+//     formData.append("year", year);
+//     formData.append("sticker", sticker);
+//     formData.append("category", category);
+//     formData.append("preset", preset);
 
-  useEffect(() => {
-    constructCalendar();
-  });
+//     await axios
+//       .post(`http://localhost:8000/api/products`, formData)
+//       .then(({ data }) => {
+//         Swal.fire({
+//           icon: "success",
+//           text: data.message,
+//         });
+//         onRequestClose();
+//       })
+//       .catch(({ response }) => {
+//         // if (response.status === 442) {
+//         //   setValidationError(response.data.errors);
+//         // } else {
+//         Swal.fire({
+//           text: response.data.message,
+//           icon: "error",
+//         });
+//         // }
+//       });
+//   };
 
-  const constructCalendar = () => {
-    // const daysInMonth = new Date(year, month + 1, 0).getDate();
-    // const dayOfWeek = date.getDay();
-    const daysTemp: number[] = [];
-    let dayIndex = 1;
-    let dayNextMonthIndex = 1;
-    let dayLastMonthIndex = new Date(year, month, 0).getDate() - dayOfWeek + 1;
+//   const save = () => {
+//     console.log(`date: ${date}`);
+//     console.log(`month: ${month}`);
+//     console.log(`year: ${year}`);
+//     console.log(`content: ${content}`);
+//     console.log(`sticker: ${sticker}`);
+//     console.log(`category: ${category}`);
+//     // console.log(`preset: ${preset}`);
+//   };
 
-    for (let i = 0; i <= 34; i++) {
-      if (i < dayOfWeek) {
-        daysTemp.push(dayLastMonthIndex);
-        dayLastMonthIndex += 1;
-      } else if (dayIndex > daysInMonth) {
-        daysTemp.push(dayNextMonthIndex);
-        dayNextMonthIndex += 1;
-      } else {
-        daysTemp.push(dayIndex);
-        dayIndex += 1;
-      }
-    }
+//   return (
+//     <Modal
+//       isOpen={isOpen}
+//       onRequestClose={onRequestClose}
+//       contentLabel="Create Modal"
+//       style={customStyles}
+//       className="modal"
+//     >
+//       <div className="head">
+//         <h2>Create Record</h2>
+//       </div>
+//       <form className="form">
+//         <div className="input-unit preset">
+//           <input
+//             className="input drop-down"
+//             type="text"
+//             placeholder="Preset"
+//             value={preset}
+//             onChange={(event) => {
+//               setPreset(event.target.value);
+//             }}
+//           />
+//         </div>
+//         <div className="input-unit category">
+//           <div className="icon">
+//             <h2>🌻</h2>
+//           </div>
+//           <input
+//             required
+//             className="input drop-down"
+//             type="text"
+//             placeholder="Select or create Category"
+//             value={category}
+//             onChange={(event) => {
+//               setCategory(event.target.value);
+//             }}
+//           />
+//         </div>
+//         <div className="input-unit content">
+//           <input
+//             required
+//             className="input text"
+//             type="text"
+//             placeholder="....."
+//             value={content}
+//             onChange={(event) => {
+//               setContent(event.target.value);
+//             }}
+//           />
+//         </div>
+//         <div className="buttons">
+//           <button className="button delete" onClick={onRequestClose}>
+//             DELETE
+//           </button>
+//           <button
+//             className="button save"
+//             onClick={save} 
+//             type="submit"
+//           >
+//             SAVE
+//           </button>
+//         </div>
+//       </form>
+//     </Modal>
+//   );
+// };
 
-    // if (exDays > 0) {
-    //   for (let i = 0; i < exDays; i++) {
-    //     daysTemp[i] = dayIndex;
-    //     dayIndex += 1;
-    //   }
-    // }
-    if (exDays > 0) {
-        for (let i = 34; i <= 40; i++) {
-            if (i < exDays+34) {
-                daysTemp.push(dayIndex);
-                dayIndex += 1;
-            } else {
-                daysTemp.push(dayNextMonthIndex);
-                dayNextMonthIndex += 1;
-            }
-        }
-    }
+// export default CreateRecord;
 
-    setCalendarStyle();
-    setDays(daysTemp);
+
+import axios from "axios";
+import { useState } from "react";
+import Modal from "react-modal";
+import Swal from "sweetalert2";
+import "../css/create-record.css";
+
+interface Props {
+  isOpen: boolean;
+  onRequestClose: () => void;
+  date: number;
+  month: number;
+  year: number;
+}
+
+const CreateRecord = ({ isOpen, onRequestClose, date, month, year }: Props) => {
+  const customStyles = {
+    overlay: {
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+    },
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      border: "",
+      background: "#F5F5F5",
+      borderRadius: "40px", // Set border radius for rounded corners
+      width: "100%", // Set the width of the modal
+      maxWidth: "700px", // Set the maximum width
+    },
   };
 
-  const handleDateChange = async (selectedDate: never) => {
-    await    setDate(selectedDate);
-    const day = new Date(selectedDate);
-    await setMonth(day.getMonth());
-    await setMonthLabel(monthsLabel[day.getMonth()]);
-    await setYear(day.getFullYear());
+  const [content, setContent] = useState("");
+  const [sticker, setSticker] = useState("🌞");
+  const [category, setCategory] = useState("");
+  const [preset, setPreset] = useState("");
 
-    await setDaysInMonth(new Date(year, month + 1, 0).getDate());
-    await setDayOfWeek(date.getDay());
-    await setExDays(daysInMonth + dayOfWeek - 35);
-  };
+  const createRecord = async (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("day", date);
+    formData.append("month", month);
+    formData.append("year", year);
+    formData.append("content", content);
+    formData.append("sticker", sticker);
+    formData.append("category", category);
+    formData.append("preset", preset);
 
-  const setCalendarStyle = () => {
-    if(exDays > 0) {
-        setStyle('calendar-42');
-    } else {
-        setStyle('calendar')
-    }
-  };
-
-  const getDayStyle = (index: number) => {
-    if (index < dayOfWeek) {
-      return "calendar-day before";
-    } else if (index > dayOfWeek + daysInMonth - 1) {
-      return "calendar-day after";
-    } else {
-      return "calendar-day";
-    }
+    await axios
+      .post(`http://localhost:8000/api/records`, formData)
+      .then(({ data }) => {
+        Swal.fire({
+          icon: "success",
+          text: data.message,
+        });
+        onRequestClose();
+      })
+      .catch(({ response }) => {
+        // if (response.status === 442) {
+        //   setValidationError(response.data.errors);
+        // } else {
+        Swal.fire({
+          text: response.data.message,
+          icon: "error",
+        });
+        // }
+      });
   };
 
   return (
-    <>
-      <DatePicker
-        selected={date}
-        showIcon
-        onChange={handleDateChange}
-        dateFormat="MM/yyyy"
-        showMonthYearPicker
-      />
-      <div className="calendar-month">
-        <h1>{monthLabel}</h1>
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={onRequestClose}
+      contentLabel="Create Modal"
+      style={customStyles}
+      className="modal"
+    >
+      <div className="head">
+        <h2>Create Record</h2>
       </div>
-      <div className={style}>
-        <div className="calendar-header-day">
-          <h1>SUN</h1>
+      <form className="form">
+        <div className="input-unit preset">
+          <input
+            className="input drop-down"
+            type="text"
+            placeholder="Preset"
+            value={preset}
+            onChange={(event) => {
+              setPreset(event.target.value);
+            }}
+          />
         </div>
-        <div className="calendar-header-day">
-          <h1>MON</h1>
+        <div className="input-unit category">
+          <div className="icon">
+            <h2>🌻</h2>
+          </div>
+          <input
+            required
+            className="input drop-down"
+            type="text"
+            placeholder="Select or create Category"
+            value={category}
+            onChange={(event) => {
+              setCategory(event.target.value);
+            }}
+          />
         </div>
-        <div className="calendar-header-day">
-          <h1>TUE</h1>
+        <div className="input-unit content">
+          <input
+            required
+            className="input text"
+            type="text"
+            placeholder="....."
+            value={content}
+            onChange={(event) => {
+              setContent(event.target.value);
+            }}
+          />
         </div>
-        <div className="calendar-header-day">
-          <h1>WED</h1>
+        <div className="buttons">
+          <button className="button delete" onClick={onRequestClose}>
+            DELETE
+          </button>
+          <button
+            className="button save"
+            onClick={createRecord} 
+            type="submit"
+          >
+            SAVE
+          </button>
         </div>
-        <div className="calendar-header-day">
-          <h1>THU</h1>
-        </div>
-        <div className="calendar-header-day">
-          <h1>FRI</h1>
-        </div>
-        <div className="calendar-header-day">
-          <h1>SAT</h1>
-        </div>
-        {days.length > 0
-          ? days.map((day, index) => (
-              <div key={index} className={getDayStyle(index)}>
-                <h1>{day}</h1>
-              </div>
-            ))
-          : null}
-      </div>
-    </>
+      </form>
+    </Modal>
   );
 };
 
-export default Calendar;
+export default CreateRecord;

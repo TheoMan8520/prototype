@@ -15,11 +15,8 @@ return new class extends Migration
             $table->foreignId('category_id')
                 ->constrained('categories');
             $table->foreignId('preset_id')
-                ->constrained('presets')
-                ->nullable();
-            $table->foreignId('day_id')
-                ->constrained('days')
-                ->onDelete('cascade');
+                ->nullable()
+                ->constrained('presets');
         });
     }
 
@@ -33,8 +30,6 @@ return new class extends Migration
             $table->dropColumn('category_id');
             $table->dropForeign(['preset_id']);
             $table->dropColumn('preset_id');
-            $table->dropForeign(['day_id']);
-            $table->dropColumn('day_id');
         });
     }
 };

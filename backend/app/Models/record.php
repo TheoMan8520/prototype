@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class record extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['content', 'day', 'month', 'year', 'category_id', 'preset_id'];
 }

@@ -98,20 +98,21 @@ const Calendar = () => {
   const sentTo = (index: number, day: number) => {
     const to = `/day/${index}/${day}/`;
     if (index < firstDay) {
-        if(month == 0){
-            return to+`12`;
-        } else {
-            return to+`${month}`;
-        }
-      } else if (index > firstDay + daysInMonth - 1) {
-        if (month == 11) {
-            return to+`1`;
-        } else {
-            return to+`${month+2}`;
-        }
+      if (month == 0) {
+        return to + `12/${year}`;
       } else {
-        return to+`${month+1}`;
+        return to + `${month}/${year}`;
       }
+    } else if (index > firstDay + daysInMonth - 1) {
+      if (month == 11) {
+        return to + `1/${year}`;
+      } else {
+        return to + `${month + 2}/${year}`;
+      }
+    } else {
+      return to + `${month + 1}/${year}`;
+    }
+    // return to+`/${year}`;
   };
 
   return (
@@ -160,7 +161,11 @@ const Calendar = () => {
         </div>
         {days.length > 0
           ? days.map((day, index) => (
-              <Link to={sentTo(index, day)} key={index} className={getDayStyle(index)}>
+              <Link
+                to={sentTo(index, day)}
+                key={index}
+                className={getDayStyle(index)}
+              >
                 <h1>{day}</h1>
               </Link>
             ))

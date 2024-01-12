@@ -9,10 +9,9 @@ function App() {
   return (
     <Router>
       <MainPage>
-        {/* <Keep/> */}
         <Routes>
           <Route path="/" element={<Calendar />} />
-          <Route path="/day/:index/:date/:month" element={<Daily />}/>
+          <Route path="/day/:index/:date/:month/:year" element={<Daily />}/>
         </Routes>
       </MainPage>
     </Router>

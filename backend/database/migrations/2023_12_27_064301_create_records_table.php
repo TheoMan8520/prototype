@@ -14,6 +14,10 @@ return new class extends Migration
         Schema::create('records', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->text('content');
+            $table->integer('day');
+            $table->integer('month');
+            $table->integer('year');
+            $table->timestamps();
         });
     }
 

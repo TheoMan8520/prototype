@@ -16,7 +16,7 @@ const MainPage = ({children}: Props) => {
                 {children}
             </div>
             <div className="right-body-section"></div>
-        H</div>
+        </div>
     </div>
   )
 }

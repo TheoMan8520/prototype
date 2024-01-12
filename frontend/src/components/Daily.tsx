@@ -2,12 +2,16 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../css/daily.css";
+import CreateCategory from "./CreateCategory";
 import "./CreateRecord";
 import CreateRecord from "./CreateRecord";
 
 const Daily = () => {
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isCreateRecord, setisCreateRecord] = useState(false);
+  const [isCreateCategory, setisCreateCategory] = useState(false);
   const [records, setRecords] = useState([]);
+  const [categories, setCategories] = useState([]);
+  // const [presets, setPresets] = useState([]);
 
   const { index } = useParams();
   const { date } = useParams();
@@ -36,10 +40,11 @@ const Daily = () => {
   };
 
   useEffect(() => {
-    if (!isCreateModalOpen) {
+    if (!isCreateRecord || !isCreateCategory) {
       fetchRecords();
+      // console.log("categories:", categories);
     }
-  }, [isCreateModalOpen]);
+  }, [isCreateRecord, isCreateCategory]);
 
   const fetchRecords = async () => {
     await axios
@@ -47,27 +52,54 @@ const Daily = () => {
       .then(({ data }) => {
         // console.log(data.records);
         setRecords(data.records);
-        // console.log("records:", records); 
+        // console.log("records:", records);
+        setCategories(data.categories);
       });
   };
-  
 
-  const openCreateModal = () => {
-    setIsCreateModalOpen(true);
+  const getSticker = (categoryId: number): string | undefined => {
+    const foundCategory = categories.find(
+      (category) => categoryId === category.id
+    );
+
+    return foundCategory ? foundCategory.sticker : undefined;
   };
 
-  const closeCreateModal = () => {
-    setIsCreateModalOpen(false);
+  const openCreateRecord = () => {
+    setisCreateRecord(true);
+  };
+
+  const closeCreateRecord = () => {
+    setisCreateRecord(false);
+  };
+
+  const openCreateCategory = () => {
+    setisCreateCategory(true);
+  };
+
+  const closeCreateCategory = () => {
+    setisCreateCategory(false);
   };
 
   return (
     <>
-      {/* <div>
-            This is daily of {date} with index:{index} which is {getDayLabel()} in {month}
-        </div> */}
+      <CreateRecord
+        isOpen={isCreateRecord}
+        onRequestClose={closeCreateRecord}
+        date={date}
+        month={month}
+        year={year}
+        categories={categories}
+      />
+      <CreateCategory
+        isOpen={isCreateCategory}
+        onRequestClose={closeCreateCategory}
+      />
       <div className="daily-card">
         <div className="daily-card-head">
-          <div className="icon"></div>
+          <div className="icon" onClick={openCreateCategory}>
+            <h1>Cat</h1>
+          </div>
           <div className="text">
             <h1>{getDayLabel()}</h1>
           </div>
@@ -75,37 +107,24 @@ const Daily = () => {
             <h1>{date}</h1>
           </div>
         </div>
-        <div className="daily-card-body">
-          <CreateRecord
-            isOpen={isCreateModalOpen}
-            onRequestClose={closeCreateModal}
-            date={date}
-            month={month}
-            year={year}
-          />
+        <div className="daily-card-body" onClick={openCreateRecord}>
           {records.length > 0 ? (
             records.map((record) => (
-              <div key={record.id} className="record" onClick={openCreateModal}>
+              <div key={record.id} className="record" onClick={openCreateRecord}>
                 <div className="sticker">
-                  <h1>🥹</h1>
+                  <h1>{getSticker(record.category_id)}</h1>
                 </div>
                 <h1>{record.content}</h1>
               </div>
             ))
           ) : (
-            <div className="record" onClick={openCreateModal}>
+            <div className="record" onClick={openCreateRecord}>
               <div className="sticker">
-                <h1>🥹</h1>
+                <h1>📝</h1>
               </div>
-              <h1>asdfsadfsdfsadf</h1>
-            </div> 
-          )}
-          {/* <div className="record" onClick={openCreateModal}>
-            <div className="sticker">
-              <h1>🥹</h1>
+              <h1>+ Add record</h1>
             </div>
-            <h1>asdfsadfsdfsadf</h1>
-          </div> */}
+          )}
         </div>
       </div>
     </>

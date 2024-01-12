@@ -8,6 +8,10 @@
   gap: 10px;
 }
 
+.modal.category {
+  height: 280px;
+}
+
 .head {
   height: 60px;
 }
@@ -40,10 +44,30 @@
   gap: 15px;
 }
 
+.input-frame {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0px 20px;
+  gap: 15px;
+  width: 100%;
+  color: #333;
+  font-size: 30px;
+  font-weight: 500;
+
+  border: none;
+  border-radius: 300px;
+  background: #fff;
+}
+
+.input-frame h2 {
+  margin: 0;
+}
+
 .input-unit.category .icon {
   display: flex;
   width: 60px;
-  height: 60px;
+  height: 50px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
@@ -78,13 +102,20 @@
 }
 
 .input.drop-down {
-  padding: 10px 30px;
+  padding: 10px 2px;
+  border-radius: 0;
   height: 60px;
 }
 
 .input.text {
   padding: 15px 40px;
   height: 75px;
+}
+
+.input.sticker {
+  padding: 0px 0px;
+  height: 30px;
+  width: 30px;
 }
 
 .buttons {
@@ -117,5 +148,6 @@
 }
 
 .button.save {
-  background: #c9c9c9;
+  background: #6D6AF8;
+  /* background: #c9c9c9; */
 }

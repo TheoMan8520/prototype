@@ -124,8 +124,11 @@ class RecordController extends Controller
                 ->where('year', $year)
                 ->get();
 
+            $categories = category::all();
+
             return response()->json([
                 'records' => $records,
+                'categories' => $categories,
             ]);
         } catch (\Exception $e) {
             Log::error($e->getMessage());

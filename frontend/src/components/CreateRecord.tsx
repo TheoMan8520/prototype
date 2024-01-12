@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "react-modal";
 import Swal from "sweetalert2";
 import "../css/create-record.css";
@@ -10,15 +10,24 @@ interface Props {
   date: number;
   month: number;
   year: number;
+  // presets: [];
+  categories: [];
 }
 
-const CreateRecord = ({ isOpen, onRequestClose, date, month, year }: Props) => {
+const CreateRecord = ({
+  isOpen,
+  onRequestClose,
+  date,
+  month,
+  year,
+  categories,
+}: Props) => {
   const customStyles = {
     overlay: {
       backgroundColor: "rgba(0, 0, 0, 0.5)",
     },
     content: {
-      top: "50%",
+      top: "35%",
       left: "50%",
       right: "auto",
       bottom: "auto",
@@ -26,14 +35,14 @@ const CreateRecord = ({ isOpen, onRequestClose, date, month, year }: Props) => {
       transform: "translate(-50%, -50%)",
       border: "",
       background: "#F5F5F5",
-      borderRadius: "40px", // Set border radius for rounded corners
-      width: "100%", // Set the width of the modal
-      maxWidth: "700px", // Set the maximum width
+      borderRadius: "40px",
+      width: "100%", 
+      maxWidth: "700px", 
     },
   };
 
   const [content, setContent] = useState("");
-  const [sticker, setSticker] = useState("🌞");
+  const [sticker, setSticker] = useState("");
   const [category, setCategory] = useState("");
   const [preset, setPreset] = useState("");
 
@@ -51,17 +60,19 @@ const CreateRecord = ({ isOpen, onRequestClose, date, month, year }: Props) => {
     if (preset !== "") {
       formData.append("preset", preset);
     }
-  
+
     try {
-      const response = await axios.post(`http://localhost:8000/api/records`, formData);
+      const response = await axios.post(
+        `http://localhost:8000/api/records`,
+        formData
+      );
       Swal.fire({
         icon: "success",
         text: response.data.message,
       });
-      clearInput();
-      onRequestClose();
+      closeModal();
     } catch (error) {
-      console.error(error); // Log the error for debugging
+      console.error(error);
       Swal.fire({
         text: "An error occurred while processing the request.",
         icon: "error",
@@ -69,14 +80,47 @@ const CreateRecord = ({ isOpen, onRequestClose, date, month, year }: Props) => {
     }
   };
 
-  const clearInput = () => {
-    setContent("")
-    setSticker("🌞")
-    setCategory("")
-    setPreset("")
-  }
-  
+  const syncSticker = () => {
+    const foundCategory = categories.find(
+      (categoryItem) => category === categoryItem.category
+    );
+    if (foundCategory) {
+      setSticker(foundCategory.sticker);
+    }
+    // categories.forEach((categoryItem) => {
+    //   if (category === categoryItem.category) {
+    //     setSticker(categoryItem.sticker);
+    //   }
+    // });
+  };
 
+  const closeModal = () => {
+    setContent("");
+    setSticker("");
+    setCategory("");
+    setPreset("");
+    onRequestClose();
+  };
+
+  const [firstRender, setFirstRender] = useState(true);
+
+  useEffect(() => {
+    const setUp = async () => {
+      if (categories.length === 0) {
+        setSticker("📝");
+      }
+  
+      if (firstRender && categories.length > 0) {
+        setCategory(categories[0].category);
+        setFirstRender(false);
+      }
+  
+      syncSticker();
+    };
+  
+    setUp(); 
+  }, [category, categories, firstRender]);
+  
   return (
     <Modal
       isOpen={isOpen}
@@ -90,32 +134,53 @@ const CreateRecord = ({ isOpen, onRequestClose, date, month, year }: Props) => {
       </div>
       <form className="form">
         <div className="input-unit preset">
-          <h2>Preset:</h2>
-          <input
-            className="input drop-down"
-            type="text"
-            placeholder="Preset"
-            value={preset}
-            onChange={(event) => {
-              setPreset(event.target.value);
-            }}
-          />
+          <div className="input-frame">
+            <h2>Preset:</h2>
+            <input
+              className="input drop-down"
+              type="text"
+              placeholder="Preset"
+              value={preset}
+              onChange={(event) => {
+                setPreset(event.target.value);
+              }}
+            />
+          </div>
         </div>
         <div className="input-unit category">
-          <h2>Category:</h2>
           <div className="icon">
-            <h2>🌻</h2>
+            <input
+              required
+              className="input sticker"
+              type="text"
+              value={sticker}
+              disabled
+            />
           </div>
-          <input
-            required
-            className="input drop-down"
-            type="text"
-            placeholder="Select or create Category"
-            value={category}
-            onChange={(event) => {
-              setCategory(event.target.value);
-            }}
-          />
+          <div className="input-frame">
+            <h2>Category:</h2>
+            <select
+              required
+              className="input drop-down"
+              value={category}
+              onChange={(event) => {
+                setCategory(event.target.value);
+                syncSticker();
+              }}
+            >
+              {categories.length > 0 ? (
+                categories.map((categoryItem) => (
+                  <option key={categoryItem.id} value={categoryItem.category}>
+                    {categoryItem.category}
+                  </option>
+                ))
+              ) : (
+                <option value={"Memo"}>
+                  Memo
+                </option>
+              )}
+            </select>
+          </div>
         </div>
         <div className="input-unit content">
           <input
@@ -130,8 +195,8 @@ const CreateRecord = ({ isOpen, onRequestClose, date, month, year }: Props) => {
           />
         </div>
         <div className="buttons">
-          <button className="button delete" onClick={onRequestClose}>
-            DELETE
+          <button className="button delete" onClick={closeModal}>
+            CANCEL
           </button>
           <button className="button save" onClick={createRecord} type="submit">
             SAVE

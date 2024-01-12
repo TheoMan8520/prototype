@@ -90,7 +90,10 @@
   align-self: stretch;
   
   border: 2px solid #c9c9c9;
+  border-radius: 4px;
   background: #fff;
+
+  cursor: pointer;
 }
 
 .daily-card-body .record {
@@ -103,6 +106,8 @@
   border-top: none;
   border-left: none;
   border-right: none;
+
+  cursor: pointer;
 }
 
 .daily-card-body .record .sticker {

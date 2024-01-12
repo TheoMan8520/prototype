@@ -29,6 +29,27 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         //
+        $request->validate([
+            'sticker' => 'required',
+            'category' => 'required',
+        ]);
+
+        try {
+            $category = category::where('category', $request->category)->firstOrFail();
+
+            return response()->json([
+                'message' => 'The category already exists. Please change the name.'
+            ], 500);
+        } catch (\Exception $e) {
+            $category = new category();
+            $category->sticker = $request->sticker;
+            $category->category = $request->category;
+            $category->save();
+
+            return response()->json([
+                'message' => 'Record created successfully'
+            ]);
+        }
     }
 
     /**

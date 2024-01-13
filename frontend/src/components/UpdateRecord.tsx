@@ -7,21 +7,17 @@ import "../css/create-record.css";
 interface Props {
   isOpen: boolean;
   onRequestClose: () => void;
-  date: number;
-  month: number;
-  year: number;
+  id: number;
   // presets: [];
   categories: [];
   firstRender: boolean;
   setRender: () => void;
 }
 
-const CreateRecord = ({
+const UpdateRecord = ({
   isOpen,
   onRequestClose,
-  date,
-  month,
-  year,
+  id,
   categories,
   firstRender,
   setRender,
@@ -40,8 +36,8 @@ const CreateRecord = ({
       border: "",
       background: "#F5F5F5",
       borderRadius: "40px",
-      width: "100%", 
-      maxWidth: "700px", 
+      width: "100%",
+      maxWidth: "700px",
     },
   };
 
@@ -50,13 +46,10 @@ const CreateRecord = ({
   const [category, setCategory] = useState("");
   const [preset, setPreset] = useState("");
 
-  const createRecord = async (e) => {
+  const updateRecord = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("content", content);
-    formData.append("day", date);
-    formData.append("month", month);
-    formData.append("year", year);
     formData.append("sticker", sticker);
     formData.append("category", category);
     // formData.append("preset", preset);
@@ -67,7 +60,7 @@ const CreateRecord = ({
 
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/records`,
+        `http://localhost:8000/api/records/${id}`,
         formData
       );
       Swal.fire({
@@ -91,40 +84,77 @@ const CreateRecord = ({
     if (foundCategory) {
       setSticker(foundCategory.sticker);
     }
-    // categories.forEach((categoryItem) => {
-    //   if (category === categoryItem.category) {
-    //     setSticker(categoryItem.sticker);
-    //   }
-    // });
   };
+  const [isSetCategory, setIsSetCategory] = useState(false);
 
   const closeModal = () => {
-    setContent("");
-    setSticker("");
-    setCategory("");
-    setPreset("");
+    setIsSetCategory(false);
     onRequestClose();
   };
 
-  // const [firstRender, setFirstRender] = useState(true);
-
   useEffect(() => {
-    const setUp = async () => {
-      if (categories.length === 0) {
-        setSticker("📝");
-      }
-  
-      if (firstRender && categories.length > 0) {
-        setCategory(categories[0].category);
-        setRender();
-      }
-  
-      syncSticker();
+    const fetchRecord = async () => {
+      await axios
+        .get(`http://localhost:8000/api/records/${id}`)
+        .then(({ data }) => {
+          const { content, category_id } = data.record;
+          console.log("1. Record:", data.record);
+          setContent(content);
+          // Can change category within one record but when change record it takes 2 times
+          if (!isSetCategory) {
+            const foundCategory = categories.find(
+              (categoryItem) => category_id === categoryItem.id
+            );
+            setCategory(foundCategory.category);
+            setSticker(foundCategory.sticker);
+            setIsSetCategory(true);
+          }
+
+          // change category according to present category but can not change category within one record
+          // const foundCategory = categories.find(
+          //   (categoryItem) => category_id === categoryItem.id
+          // );
+          // setCategory(foundCategory.category);
+          // setSticker(foundCategory.sticker);
+        })
+        .catch(({ response: { data } }) => {
+          Swal.fire({
+            text: data.message,
+            icon: "error",
+          });
+        });
     };
-  
-    setUp(); 
-  }, [category, categories, firstRender]);
-  
+
+    if (firstRender && id) {
+      fetchRecord();
+      setRender();
+      console.log("2. first fetch with id:", id);
+    } else if (id) {
+      fetchRecord();
+      console.log("2.. only id");
+    }
+    syncSticker();
+    console.log("3. useEff with id:", id);
+  }, [category, isSetCategory, firstRender, id]);
+
+  const deleteRecord = async () => {
+    await axios
+      .delete(`http://localhost:8000/api/records/${id}`)
+      .then(({ data }) => {
+        Swal.fire({
+          icon: "success",
+          text: data.message,
+        });
+        closeModal();
+      })
+      .catch(({ response: { data } }) => {
+        Swal.fire({
+          text: "An error occurred while processing the request.",
+          icon: "error",
+        });
+      });
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -134,7 +164,7 @@ const CreateRecord = ({
       className="modal"
     >
       <div className="head">
-        <h2>Create Record</h2>
+        <h2>Update Record</h2>
       </div>
       <form className="form">
         <div className="input-unit preset">
@@ -179,9 +209,7 @@ const CreateRecord = ({
                   </option>
                 ))
               ) : (
-                <option value={"Memo"}>
-                  Memo
-                </option>
+                <option value={"Memo"}>Memo</option>
               )}
             </select>
           </div>
@@ -202,7 +230,10 @@ const CreateRecord = ({
           <button className="button delete" onClick={closeModal}>
             CANCEL
           </button>
-          <button className="button save" onClick={createRecord} type="submit">
+          <button className="button delete" onClick={deleteRecord}>
+            DELETE
+          </button>
+          <button className="button save" onClick={updateRecord} type="submit">
             SAVE
           </button>
         </div>
@@ -211,4 +242,4 @@ const CreateRecord = ({
   );
 };
 
-export default CreateRecord;
+export default UpdateRecord;

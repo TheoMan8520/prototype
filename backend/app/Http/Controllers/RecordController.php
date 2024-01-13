@@ -90,6 +90,16 @@ class RecordController extends Controller
     public function show(record $record)
     {
         //
+        try {
+            return response()->json([
+                'record' => $record,
+            ]);
+        } catch(\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json([
+                'message' => 'Something went wrong while trying to fetch record.'
+            ], 500);
+        }
     }
 
     /**
@@ -103,9 +113,46 @@ class RecordController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, record $record)
+    public function update(Request $request, $id)
     {
         //
+        $request->validate([
+            'content' => 'required',
+            'sticker' => 'required',
+            'category' => 'required',
+            'preset' => 'nullable',
+        ]);
+
+        try {
+            $record = record::find($id);
+            $record->content = $request->content;
+
+            $category = category::where('category', $request->category)->first();
+            $record->category_id = $category->id;
+
+            if ($request->has('preset')) {
+                $preset = preset::where('name', $request->preset)->first();
+                if (!$preset) {
+                    $preset = new preset();
+                }
+                $preset->name = $request->preset;
+                $preset->content = $request->content;
+                $preset->category_id = $category->id;
+                $preset->save();
+                $record->preset_id = $preset->id;
+            }
+
+            $record->save();
+
+            return response()->json([
+                'message' => 'Record is updated successfully'
+            ]);
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json([
+                'message' => 'Something went wrong while trying to update record.'
+            ], 500);
+        }
     }
 
     /**
@@ -114,6 +161,17 @@ class RecordController extends Controller
     public function destroy(record $record)
     {
         //
+        try {
+            $record->delete();
+            return response()->json([
+                'message' => "Record is deleted successfully."
+            ]);
+        } catch(\Exception $e) {
+            Log::error($e->getMessage());
+            return response()->json([
+                'message' => 'Something went wrong while trying to delete record.'
+            ], 500);
+        }
     }
 
     public function getRecordOfDay($day, $month, $year)

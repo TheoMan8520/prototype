@@ -22,8 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::resource('records', RecordController::class);
 Route::resource('categories', CategoryController::class);
-Route::post('/records', [RecordController::class, 'store']);
-
-
 
 Route::get('/records/{day}/{month}/{year}', [RecordController::class, 'getRecordOfDay']);
+Route::post('/records/{id}', [RecordController::class, 'update']);
+Route::post('/categories/{id}', [CategoryController::class, 'update']);

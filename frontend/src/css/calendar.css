@@ -121,7 +121,12 @@
     margin: 0;
 }
 
-.calendar-day.before, .calendar-day.calendar-day.after {
+.before, .after {
     color: #C9C9C9;
+}
+
+.today {
+    background: rgba(109, 106, 248, 0.50);
+    color:#FFF;
 }
 

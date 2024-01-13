@@ -86,10 +86,14 @@ const Calendar = () => {
   };
 
   const getDayStyle = (index: number) => {
+    const today = new Date();
+    const todayIndex = today.getDate();
     if (index < firstDay) {
       return "calendar-day before";
     } else if (index > firstDay + daysInMonth - 1) {
       return "calendar-day after";
+    } else if (index === todayIndex ) {
+      return "calendar-day today";
     } else {
       return "calendar-day";
     }

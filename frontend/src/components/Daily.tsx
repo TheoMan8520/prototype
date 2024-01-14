@@ -11,6 +11,10 @@ const Daily = () => {
   const [records, setRecords] = useState([]);
   const [categories, setCategories] = useState([]);
   // const [presets, setPresets] = useState([]);
+  const [id, setId] = useState();
+  const [content, setContent] = useState("");
+  const [categoryId, setCategoryId] = useState(-1);
+  // const [preset, setPreset] = useState("");
 
   const { index } = useParams();
   const { date } = useParams();
@@ -32,7 +36,6 @@ const Daily = () => {
   useEffect(() => {
     if (!isCreateRecord || !isUpdateRecord) {
       fetchRecords();
-      // console.log("categories:", categories);
     }
   }, [isCreateRecord, isUpdateRecord]);
 
@@ -40,9 +43,7 @@ const Daily = () => {
     await axios
       .get(`http://localhost:8000/api/records/${date}/${month}/${year}`)
       .then(({ data }) => {
-        // console.log(data.records);
         setRecords(data.records);
-        // console.log("records:", records);
         setCategories(data.categories);
       });
   };
@@ -61,38 +62,18 @@ const Daily = () => {
 
   const closeCreateRecord = () => {
     setisCreateRecord(false);
-    setFirstRender(true);
   };
 
-  const openUpdateRecord = async (id) => {
+  const openUpdateRecord = async (id, content, category_id) => {
     setId(id);
-    console.log(
-      "0. Set id:",
-      id,
-      "__________________________________________________________________"
-    );
+    setContent(content);
+    setCategoryId(category_id);
     setisUpdateRecord(true);
-    console.log("0.1 Open update");
+    console.log("Open update with id:", id)
   };
 
   const closeUpdateRecord = async () => {
     setisUpdateRecord(false);
-    console.log(
-      "Close update __________________________________________________________________"
-    );
-    setFirstRender2(true);
-  };
-
-  const [firstRender, setFirstRender] = useState(true);
-  const [firstRender2, setFirstRender2] = useState(true);
-  const [id, setId] = useState();
-
-  const setRender = () => {
-    setFirstRender(false);
-  };
-
-  const setRender2 = () => {
-    setFirstRender2(false);
   };
 
   return (
@@ -104,16 +85,14 @@ const Daily = () => {
         month={month}
         year={year}
         categories={categories}
-        firstRender={firstRender}
-        setRender={setRender}
       />
       <UpdateRecord
         isOpen={isUpdateRecord}
         onRequestClose={closeUpdateRecord}
         id={id}
         categories={categories}
-        firstRender={firstRender2}
-        setRender={setRender2}
+        contentIn={content}
+        categoryIn={categoryId}
       />
       <div className="daily-card">
         <div className="daily-card-head">
@@ -133,7 +112,7 @@ const Daily = () => {
                 <div
                   key={record.id}
                   className="record"
-                  onClick={() => openUpdateRecord(record.id)}
+                  onClick={() => openUpdateRecord(record.id, record.content, record.category_id)}
                 >
                   <div className="sticker">
                     <h1>{getSticker(record.category_id)}</h1>

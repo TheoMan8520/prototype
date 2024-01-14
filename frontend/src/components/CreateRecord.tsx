@@ -12,8 +12,6 @@ interface Props {
   year: number;
   // presets: [];
   categories: [];
-  firstRender: boolean;
-  setRender: () => void;
 }
 
 const CreateRecord = ({
@@ -23,8 +21,6 @@ const CreateRecord = ({
   month,
   year,
   categories,
-  firstRender,
-  setRender,
 }: Props) => {
   const customStyles = {
     overlay: {
@@ -99,31 +95,28 @@ const CreateRecord = ({
   };
 
   const closeModal = () => {
-    setContent("");
-    setSticker("");
-    setCategory("");
-    setPreset("");
+    setUp();
+    setFirstRender(true)
     onRequestClose();
   };
 
-  // const [firstRender, setFirstRender] = useState(true);
+  const [firstRender, setFirstRender] = useState(true);
+
+  const setUp = async () => {
+    if (categories.length === 0) {
+      setSticker("📝");
+    } else if (firstRender && categories.length > 0) {
+      setContent("")
+      setCategory(categories[0].category);
+      setFirstRender(false);
+    }
+
+    syncSticker();
+  };
 
   useEffect(() => {
-    const setUp = async () => {
-      if (categories.length === 0) {
-        setSticker("📝");
-      }
-  
-      if (firstRender && categories.length > 0) {
-        setCategory(categories[0].category);
-        setRender();
-      }
-  
-      syncSticker();
-    };
-  
-    setUp(); 
-  }, [category, categories, firstRender]);
+    setUp();
+  }, [category, isOpen]);
   
   return (
     <Modal

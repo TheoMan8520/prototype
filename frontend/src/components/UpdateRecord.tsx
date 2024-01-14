@@ -10,8 +10,8 @@ interface Props {
   id: number;
   // presets: [];
   categories: [];
-  firstRender: boolean;
-  setRender: () => void;
+  contentIn: string;
+  categoryIn: number;
 }
 
 const UpdateRecord = ({
@@ -19,8 +19,8 @@ const UpdateRecord = ({
   onRequestClose,
   id,
   categories,
-  firstRender,
-  setRender,
+  contentIn,
+  categoryIn,
 }: Props) => {
   const customStyles = {
     overlay: {
@@ -45,6 +45,7 @@ const UpdateRecord = ({
   const [sticker, setSticker] = useState("");
   const [category, setCategory] = useState("");
   const [preset, setPreset] = useState("");
+  const [firstRender, setFirstRender] = useState(true);
 
   const updateRecord = async (e) => {
     e.preventDefault();
@@ -52,7 +53,6 @@ const UpdateRecord = ({
     formData.append("content", content);
     formData.append("sticker", sticker);
     formData.append("category", category);
-    // formData.append("preset", preset);
 
     if (preset !== "") {
       formData.append("preset", preset);
@@ -85,66 +85,43 @@ const UpdateRecord = ({
       setSticker(foundCategory.sticker);
     }
   };
-  const [isSetCategory, setIsSetCategory] = useState(false);
 
   const closeModal = () => {
-    setIsSetCategory(false);
+    setUp();
+    setFirstRender(true);
     onRequestClose();
   };
 
+  const setUp = () => {
+    setContent(contentIn);
+    const foundCategory = categories.find(
+      (categoryItem) => categoryIn === categoryItem.id
+    );
+    if (foundCategory) {
+      setCategory(foundCategory.category)
+      setSticker(foundCategory.sticker);
+    }
+  }
+
   useEffect(() => {
-    const fetchRecord = async () => {
-      await axios
-        .get(`http://localhost:8000/api/records/${id}`)
-        .then(({ data }) => {
-          const { content, category_id } = data.record;
-          console.log("1. Record:", data.record);
-          setContent(content);
-          // Can change category within one record but when change record it takes 2 times
-          if (!isSetCategory) {
-            const foundCategory = categories.find(
-              (categoryItem) => category_id === categoryItem.id
-            );
-            setCategory(foundCategory.category);
-            setSticker(foundCategory.sticker);
-            setIsSetCategory(true);
-          }
-
-          // change category according to present category but can not change category within one record
-          // const foundCategory = categories.find(
-          //   (categoryItem) => category_id === categoryItem.id
-          // );
-          // setCategory(foundCategory.category);
-          // setSticker(foundCategory.sticker);
-        })
-        .catch(({ response: { data } }) => {
-          Swal.fire({
-            text: data.message,
-            icon: "error",
-          });
-        });
-    };
-
     if (firstRender && id) {
-      fetchRecord();
-      setRender();
-      console.log("2. first fetch with id:", id);
-    } else if (id) {
-      fetchRecord();
-      console.log("2.. only id");
+      setUp();
+      setFirstRender(false);
     }
     syncSticker();
-    console.log("3. useEff with id:", id);
-  }, [category, isSetCategory, firstRender, id]);
+  }, [category, id]);
 
-  const deleteRecord = async () => {
+  const deleteRecord = async (e) => {
+    e.preventDefault();
     await axios
       .delete(`http://localhost:8000/api/records/${id}`)
       .then(({ data }) => {
         Swal.fire({
           icon: "success",
           text: data.message,
-        });
+        })
+        // setFirstRender(true);
+        // onRequestClose();
         closeModal();
       })
       .catch(({ response: { data } }) => {

@@ -7,17 +7,21 @@ import "../css/create-record.css";
 interface Props {
   isOpen: boolean;
   onRequestClose: () => void;
-  id: number;
+  date: number;
+  month: number;
+  year: number;
   // presets: [];
   categories: [];
   firstRender: boolean;
   setRender: () => void;
 }
 
-const UpdateRecord = ({
+const CreateRecord = ({
   isOpen,
   onRequestClose,
-  id,
+  date,
+  month,
+  year,
   categories,
   firstRender,
   setRender,
@@ -36,8 +40,8 @@ const UpdateRecord = ({
       border: "",
       background: "#F5F5F5",
       borderRadius: "40px",
-      width: "100%",
-      maxWidth: "700px",
+      width: "100%", 
+      maxWidth: "700px", 
     },
   };
 
@@ -46,10 +50,13 @@ const UpdateRecord = ({
   const [category, setCategory] = useState("");
   const [preset, setPreset] = useState("");
 
-  const updateRecord = async (e) => {
+  const createRecord = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("content", content);
+    formData.append("day", date);
+    formData.append("month", month);
+    formData.append("year", year);
     formData.append("sticker", sticker);
     formData.append("category", category);
     // formData.append("preset", preset);
@@ -60,7 +67,7 @@ const UpdateRecord = ({
 
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/records/${id}`,
+        `http://localhost:8000/api/records`,
         formData
       );
       Swal.fire({
@@ -84,6 +91,11 @@ const UpdateRecord = ({
     if (foundCategory) {
       setSticker(foundCategory.sticker);
     }
+    // categories.forEach((categoryItem) => {
+    //   if (category === categoryItem.category) {
+    //     setSticker(categoryItem.sticker);
+    //   }
+    // });
   };
 
   const closeModal = () => {
@@ -94,101 +106,25 @@ const UpdateRecord = ({
     onRequestClose();
   };
 
+  // const [firstRender, setFirstRender] = useState(true);
+
   useEffect(() => {
-    const fetchRecord = async () => {
-      await axios
-        .get(`http://localhost:8000/api/records/${id}`)
-        .then(({ data }) => {
-          const { content, category_id } = data.record;
-          console.log("1. Record:", data.record);
-          setContent(content);
-          // if(firstRender) {
-          //   const foundCategory = categories.find(
-          //     (categoryItem) => category_id === categoryItem.id
-          //   );
-          //   setCategory(foundCategory.category);
-          //   setSticker(foundCategory.sticker);
-          // }
-
-          const foundCategory = categories.find(
-            (categoryItem) => category_id === categoryItem.id
-          );
-          setCategory(foundCategory.category);
-          setSticker(foundCategory.sticker);
-        })
-        .catch(({ response: { data } }) => {
-          Swal.fire({
-            text: data.message,
-            icon: "error",
-          });
-        });
+    const setUp = async () => {
+      if (categories.length === 0) {
+        setSticker("📝");
+      }
+  
+      if (firstRender && categories.length > 0) {
+        setCategory(categories[0].category);
+        setRender();
+      }
+  
+      syncSticker();
     };
-
-    // const setUp = async () => {
-    //   if (firstRender && id) {
-    //     await fetchRecord();
-    //     setRender();
-    //     console.log("2. first fetch with id:", id)
-    //   }
-    //   syncSticker();
-    // };
-    // setUp();
-
-    // if(id){
-    //   fetchRecord();
-    // }
-    // syncSticker();
-
-    if (firstRender && id) {
-      fetchRecord();
-      setRender();
-      console.log("2. first fetch with id:", id);
-    } else if (id) {
-      fetchRecord();
-      console.log("2.. only id")
-    }
-    syncSticker();
-    console.log("3. useEff with id:", id);
-  }, [category, categories, firstRender, id]);
-
-  const deleteRecord = async () => {
-    const isConfirm = await Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to retreive the date.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      return result.isConfirmed;
-    });
-
-    if (!isConfirm) {
-      return;
-    }
-
-    await axios
-      .delete(`http://localhost:8000/api/records/${id}`)
-      .then(({ data }) => {
-        Swal.fire({
-          icon: "success",
-          text: data.message,
-        });
-        closeModal();
-      })
-      .catch(({ response: { data } }) => {
-        Swal.fire({
-          text: "An error occurred while processing the request.",
-          icon: "error",
-        });
-      });
-  };
-
-  const sendConsole = () => {
-    console.log(id);
-  };
-
+  
+    setUp(); 
+  }, [category, categories, firstRender]);
+  
   return (
     <Modal
       isOpen={isOpen}
@@ -198,7 +134,7 @@ const UpdateRecord = ({
       className="modal"
     >
       <div className="head">
-        <h2>Update Record</h2>
+        <h2>Create Record</h2>
       </div>
       <form className="form">
         <div className="input-unit preset">
@@ -243,7 +179,9 @@ const UpdateRecord = ({
                   </option>
                 ))
               ) : (
-                <option value={"Memo"}>Memo</option>
+                <option value={"Memo"}>
+                  Memo
+                </option>
               )}
             </select>
           </div>
@@ -264,13 +202,7 @@ const UpdateRecord = ({
           <button className="button delete" onClick={closeModal}>
             CANCEL
           </button>
-          <button className="button delete" onClick={deleteRecord}>
-            DELETE
-          </button>
-          <button className="button save" onClick={sendConsole}>
-            SENT
-          </button>
-          <button className="button save" onClick={updateRecord} type="submit">
+          <button className="button save" onClick={createRecord} type="submit">
             SAVE
           </button>
         </div>
@@ -279,4 +211,4 @@ const UpdateRecord = ({
   );
 };
 
-export default UpdateRecord;
+export default CreateRecord;

@@ -67,6 +67,8 @@ const UpdateCategory = ({
   };
 
   const closeModal = async () => {
+    setSticker(stickerIn)
+    setCategory(categoryIn)
     onRequestClose();
   };
 

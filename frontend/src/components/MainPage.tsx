@@ -1,9 +1,9 @@
-import { ReactNode } from 'react';
-import '../css/main-page.css';
-import Header from './Header';
+import { ReactNode } from 'react'
+import '../css/main-page.css'
+import Header from './Header'
 
 interface Props {
-    children: ReactNode;
+  children: ReactNode
 }
 
 const MainPage = ({children}: Props) => {

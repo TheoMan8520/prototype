@@ -1,25 +1,25 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
-import "../css/daily.css";
-import CreateRecord from "./CreateRecord";
-import UpdateRecord from "./UpdateRecord";
+import axios from "axios"
+import { useEffect, useState } from "react"
+import { Link, useParams } from "react-router-dom"
+import "../css/daily.css"
+import CreateRecord from "./CreateRecord"
+import UpdateRecord from "./UpdateRecord"
 
 const Daily = () => {
-  const [isCreateRecord, setisCreateRecord] = useState(false);
-  const [isUpdateRecord, setisUpdateRecord] = useState(false);
-  const [records, setRecords] = useState([]);
-  const [categories, setCategories] = useState([]);
-  // const [presets, setPresets] = useState([]);
-  const [id, setId] = useState();
-  const [content, setContent] = useState("");
-  const [categoryId, setCategoryId] = useState(-1);
-  // const [preset, setPreset] = useState("");
+  const [isCreateRecord, setisCreateRecord] = useState(false)
+  const [isUpdateRecord, setisUpdateRecord] = useState(false)
+  const [records, setRecords] = useState([])
+  const [categories, setCategories] = useState([])
+  // const [presets, setPresets] = useState([])
+  const [id, setId] = useState()
+  const [content, setContent] = useState("")
+  const [categoryId, setCategoryId] = useState(-1)
+  // const [preset, setPreset] = useState("")
 
-  const { index } = useParams();
-  const { date } = useParams();
-  const { month } = useParams();
-  const { year } = useParams();
+  const { index } = useParams()
+  const { date } = useParams()
+  const { month } = useParams()
+  const { year } = useParams()
   const getDayLabel = () => {
     const dayLabels = [
       "Sunday",
@@ -29,52 +29,52 @@ const Daily = () => {
       "Thursday",
       "Friday",
       "Saturday",
-    ];
-    return dayLabels[parseInt(index) % 7] || "Invalid Day";
-  };
+    ]
+    return dayLabels[parseInt(index) % 7] || "Invalid Day"
+  }
 
   useEffect(() => {
     if (!isCreateRecord || !isUpdateRecord) {
-      fetchRecords();
+      fetchRecords()
     }
-  }, [isCreateRecord, isUpdateRecord]);
+  }, [isCreateRecord, isUpdateRecord])
 
   const fetchRecords = async () => {
     await axios
       .get(`http://localhost:8000/api/records/${date}/${month}/${year}`)
       .then(({ data }) => {
-        setRecords(data.records);
-        setCategories(data.categories);
-      });
-  };
+        setRecords(data.records)
+        setCategories(data.categories)
+      })
+  }
 
   const getSticker = (categoryId: number): string | undefined => {
     const foundCategory = categories.find(
       (category) => categoryId === category.id
-    );
+    )
 
-    return foundCategory ? foundCategory.sticker : undefined;
-  };
+    return foundCategory ? foundCategory.sticker : undefined
+  }
 
   const openCreateRecord = () => {
-    setisCreateRecord(true);
-  };
+    setisCreateRecord(true)
+  }
 
   const closeCreateRecord = () => {
-    setisCreateRecord(false);
-  };
+    setisCreateRecord(false)
+  }
 
   const openUpdateRecord = async (id, content, category_id) => {
-    setId(id);
-    setContent(content);
-    setCategoryId(category_id);
-    setisUpdateRecord(true);
+    setId(id)
+    setContent(content)
+    setCategoryId(category_id)
+    setisUpdateRecord(true)
     console.log("Open update with id:", id)
-  };
+  }
 
   const closeUpdateRecord = async () => {
-    setisUpdateRecord(false);
-  };
+    setisUpdateRecord(false)
+  }
 
   return (
     <>
@@ -130,7 +130,7 @@ const Daily = () => {
         </div>
       </div>
     </>
-  );
-};
+  )
+}
 
-export default Daily;
+export default Daily

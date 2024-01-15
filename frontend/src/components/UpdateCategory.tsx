@@ -1,15 +1,15 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import Modal from "react-modal";
-import Swal from "sweetalert2";
-import "../css/create-record.css";
+import axios from "axios"
+import { useEffect, useState } from "react"
+import Modal from "react-modal"
+import Swal from "sweetalert2"
+import "../css/create-record.css"
 
 interface Props {
-  isOpen: boolean;
-  onRequestClose: () => void;
-  id: number;
-  stickerIn: string;
-  categoryIn: string;
+  isOpen: boolean
+  onRequestClose: () => void
+  id: number
+  stickerIn: string
+  categoryIn: string
 }
 
 const UpdateCategory = ({
@@ -36,46 +36,46 @@ const UpdateCategory = ({
       width: "100%",
       maxWidth: "700px",
     },
-  };
+  }
 
-  const [sticker, setSticker] = useState("");
-  const [category, setCategory] = useState("");
+  const [sticker, setSticker] = useState("")
+  const [category, setCategory] = useState("")
 
   const updateCategory = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("sticker", sticker);
-    formData.append("category", category);
+    e.preventDefault()
+    const formData = new FormData()
+    formData.append("sticker", sticker)
+    formData.append("category", category)
 
     try {
       const response = await axios.post(
         `http://localhost:8000/api/categories/${id}`,
         formData
-      );
+      )
       Swal.fire({
         icon: "success",
         text: response.data.message,
-      });
-      closeModal();
+      })
+      closeModal()
     } catch (error) {
-      console.error(error);
+      console.error(error)
       Swal.fire({
         text: "An error occurred while processing the request.",
         icon: "error",
-      });
+      })
     }
-  };
+  }
 
   const closeModal = async () => {
     setSticker(stickerIn)
     setCategory(categoryIn)
-    onRequestClose();
-  };
+    onRequestClose()
+  }
 
   useEffect(() => {
     setSticker(stickerIn)
     setCategory(categoryIn)
-  }, [id]);
+  }, [id])
 
   return (
     <Modal
@@ -97,7 +97,7 @@ const UpdateCategory = ({
               type="text"
               value={sticker}
               onChange={(event) => {
-                setSticker(event.target.value);
+                setSticker(event.target.value)
               }}
             />
           </div>
@@ -109,7 +109,7 @@ const UpdateCategory = ({
               type="text"
               value={category}
               onChange={(event) => {
-                setCategory(event.target.value);
+                setCategory(event.target.value)
               }}
             />
           </div>
@@ -128,7 +128,7 @@ const UpdateCategory = ({
         </div>
       </form>
     </Modal>
-  );
-};
+  )
+}
 
-export default UpdateCategory;
+export default UpdateCategory

@@ -1,17 +1,17 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import Modal from "react-modal";
-import Swal from "sweetalert2";
-import "../css/create-record.css";
+import axios from "axios"
+import { useEffect, useState } from "react"
+import Modal from "react-modal"
+import Swal from "sweetalert2"
+import "../css/create-record.css"
 
 interface Props {
-  isOpen: boolean;
-  onRequestClose: () => void;
-  date: number;
-  month: number;
-  year: number;
-  // presets: [];
-  categories: [];
+  isOpen: boolean
+  onRequestClose: () => void
+  date: number
+  month: number
+  year: number
+  // presets: []
+  categories: []
 }
 
 const CreateRecord = ({
@@ -41,51 +41,51 @@ const CreateRecord = ({
     },
   };
 
-  const [content, setContent] = useState("");
-  const [sticker, setSticker] = useState("");
-  const [category, setCategory] = useState("");
-  const [preset, setPreset] = useState("");
+  const [content, setContent] = useState("")
+  const [sticker, setSticker] = useState("")
+  const [category, setCategory] = useState("")
+  const [preset, setPreset] = useState("")
 
   const createRecord = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("content", content);
-    formData.append("day", date);
-    formData.append("month", month);
-    formData.append("year", year);
-    formData.append("sticker", sticker);
-    formData.append("category", category);
-    // formData.append("preset", preset);
+    e.preventDefault()
+    const formData = new FormData()
+    formData.append("content", content)
+    formData.append("day", date)
+    formData.append("month", month)
+    formData.append("year", year)
+    formData.append("sticker", sticker)
+    formData.append("category", category)
+    // formData.append("preset", preset)
 
     if (preset !== "") {
-      formData.append("preset", preset);
+      formData.append("preset", preset)
     }
 
     try {
       const response = await axios.post(
         `http://localhost:8000/api/records`,
         formData
-      );
+      )
       Swal.fire({
         icon: "success",
         text: response.data.message,
-      });
-      closeModal();
+      })
+      closeModal()
     } catch (error) {
-      console.error(error);
+      console.error(error)
       Swal.fire({
         text: "An error occurred while processing the request.",
         icon: "error",
-      });
+      })
     }
-  };
+  }
 
   const syncSticker = () => {
     const foundCategory = categories.find(
       (categoryItem) => category === categoryItem.category
-    );
+    )
     if (foundCategory) {
-      setSticker(foundCategory.sticker);
+      setSticker(foundCategory.sticker)
     }
     // categories.forEach((categoryItem) => {
     //   if (category === categoryItem.category) {
@@ -95,28 +95,28 @@ const CreateRecord = ({
   };
 
   const closeModal = () => {
-    setUp();
+    setUp()
     setFirstRender(true)
-    onRequestClose();
+    onRequestClose()
   };
 
-  const [firstRender, setFirstRender] = useState(true);
+  const [firstRender, setFirstRender] = useState(true)
 
   const setUp = async () => {
     if (categories.length === 0) {
-      setSticker("📝");
+      setSticker("📝")
     } else if (firstRender && categories.length > 0) {
       setContent("")
-      setCategory(categories[0].category);
-      setFirstRender(false);
+      setCategory(categories[0].category)
+      setFirstRender(false)
     }
 
-    syncSticker();
+    syncSticker()
   };
 
   useEffect(() => {
     setUp();
-  }, [category, isOpen]);
+  }, [category, isOpen])
   
   return (
     <Modal
@@ -201,7 +201,7 @@ const CreateRecord = ({
         </div>
       </form>
     </Modal>
-  );
-};
+  )
+}
 
-export default CreateRecord;
+export default CreateRecord

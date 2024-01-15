@@ -1,17 +1,17 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import Modal from "react-modal";
-import Swal from "sweetalert2";
-import "../css/create-record.css";
+import axios from "axios"
+import { useEffect, useState } from "react"
+import Modal from "react-modal"
+import Swal from "sweetalert2"
+import "../css/create-record.css"
 
 interface Props {
-  isOpen: boolean;
-  onRequestClose: () => void;
-  id: number;
-  // presets: [];
-  categories: [];
-  contentIn: string;
-  categoryIn: number;
+  isOpen: boolean
+  onRequestClose: () => void
+  id: number
+  // presets: []
+  categories: []
+  contentIn: string
+  categoryIn: number
 }
 
 const UpdateRecord = ({
@@ -41,78 +41,78 @@ const UpdateRecord = ({
     },
   };
 
-  const [content, setContent] = useState("");
-  const [sticker, setSticker] = useState("");
-  const [category, setCategory] = useState("");
-  const [preset, setPreset] = useState("");
-  const [firstRender, setFirstRender] = useState(true);
+  const [content, setContent] = useState("")
+  const [sticker, setSticker] = useState("")
+  const [category, setCategory] = useState("")
+  const [preset, setPreset] = useState("")
+  const [firstRender, setFirstRender] = useState(true)
 
   const updateRecord = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("content", content);
-    formData.append("sticker", sticker);
-    formData.append("category", category);
+    e.preventDefault()
+    const formData = new FormData()
+    formData.append("content", content)
+    formData.append("sticker", sticker)
+    formData.append("category", category)
 
     if (preset !== "") {
-      formData.append("preset", preset);
+      formData.append("preset", preset)
     }
 
     try {
       const response = await axios.post(
         `http://localhost:8000/api/records/${id}`,
         formData
-      );
+      )
       Swal.fire({
         icon: "success",
         text: response.data.message,
-      });
-      closeModal();
+      })
+      closeModal()
     } catch (error) {
-      console.error(error);
+      console.error(error)
       Swal.fire({
         text: "An error occurred while processing the request.",
         icon: "error",
-      });
+      })
     }
-  };
+  }
 
   const syncSticker = () => {
     const foundCategory = categories.find(
       (categoryItem) => category === categoryItem.category
-    );
+    )
     if (foundCategory) {
-      setSticker(foundCategory.sticker);
+      setSticker(foundCategory.sticker)
     }
-  };
+  }
 
   const closeModal = () => {
-    setUp();
-    setFirstRender(true);
-    onRequestClose();
-  };
+    setUp()
+    setFirstRender(true)
+    onRequestClose()
+  }
 
   const setUp = () => {
-    setContent(contentIn);
+    setContent(contentIn)
     const foundCategory = categories.find(
       (categoryItem) => categoryIn === categoryItem.id
-    );
+    )
     if (foundCategory) {
       setCategory(foundCategory.category)
-      setSticker(foundCategory.sticker);
+      setSticker(foundCategory.sticker)
     }
   }
 
   useEffect(() => {
     if (firstRender && id) {
       setUp();
-      setFirstRender(false);
+      setFirstRender(false)
     }
-    syncSticker();
-  }, [category, id]);
+    syncSticker()
+  }, [category, id])
 
   const deleteRecord = async (e) => {
-    e.preventDefault();
+    e.preventDefault()
     await axios
       .delete(`http://localhost:8000/api/records/${id}`)
       .then(({ data }) => {
@@ -120,17 +120,17 @@ const UpdateRecord = ({
           icon: "success",
           text: data.message,
         })
-        // setFirstRender(true);
-        // onRequestClose();
-        closeModal();
+        // setFirstRender(true)
+        // onRequestClose()
+        closeModal()
       })
       .catch(({ response: { data } }) => {
         Swal.fire({
           text: "An error occurred while processing the request.",
           icon: "error",
-        });
-      });
-  };
+        })
+      })
+  }
 
   return (
     <Modal
@@ -153,7 +153,7 @@ const UpdateRecord = ({
               placeholder="Preset"
               value={preset}
               onChange={(event) => {
-                setPreset(event.target.value);
+                setPreset(event.target.value)
               }}
             />
           </div>
@@ -175,8 +175,8 @@ const UpdateRecord = ({
               className="input drop-down"
               value={category}
               onChange={(event) => {
-                setCategory(event.target.value);
-                syncSticker();
+                setCategory(event.target.value)
+                syncSticker()
               }}
             >
               {categories.length > 0 ? (
@@ -199,7 +199,7 @@ const UpdateRecord = ({
             placeholder="....."
             value={content}
             onChange={(event) => {
-              setContent(event.target.value);
+              setContent(event.target.value)
             }}
           />
         </div>
@@ -216,7 +216,7 @@ const UpdateRecord = ({
         </div>
       </form>
     </Modal>
-  );
-};
+  )
+}
 
-export default UpdateRecord;
+export default UpdateRecord

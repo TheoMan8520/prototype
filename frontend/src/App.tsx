@@ -1,10 +1,10 @@
-import "bootstrap/dist/css/bootstrap.css";
-// import Keep from './components/Keep';
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
-import Calendar from "./components/Calendar";
-import Category from "./components/Category";
-import Daily from "./components/Daily";
-import MainPage from "./components/MainPage";
+import "bootstrap/dist/css/bootstrap.css"
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom"
+import Calendar from "./components/Calendar"
+import Category from "./components/Category"
+import Daily from "./components/Daily"
+import MainPage from "./components/MainPage"
+
 
 function App() {
   return (
@@ -17,7 +17,8 @@ function App() {
         </Routes>
       </MainPage>
     </Router>
-  );
+    // <Att/>
+  )
 }
 
-export default App;
+export default App

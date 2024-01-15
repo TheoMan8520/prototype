@@ -1,50 +1,50 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
-import "../css/category.css";
-import CreateCategory from "./CreateCategory";
-import UpdateCategory from "./UpdateCategory";
+import axios from "axios"
+import { useEffect, useState } from "react"
+import "../css/category.css"
+import CreateCategory from "./CreateCategory"
+import UpdateCategory from "./UpdateCategory"
 
 const Category = () => {
-  const [isCreateCategory, setisCreateCategory] = useState(false);
-  const [isUpdateCategory, setisUpdateCategory] = useState(false);
-  const [categories, setCategories] = useState([]);
-  const [id, setId] = useState(-1);
-  const [sticker, setSticker] = useState("");
-  const [category, setCategory] = useState("");
+  const [isCreateCategory, setisCreateCategory] = useState(false)
+  const [isUpdateCategory, setisUpdateCategory] = useState(false)
+  const [categories, setCategories] = useState([])
+  const [id, setId] = useState(-1)
+  const [sticker, setSticker] = useState("")
+  const [category, setCategory] = useState("")
 
   useEffect(() => {
     if (!isCreateCategory || !isUpdateCategory) {
-      fetchCategories();
+      fetchCategories()
     }
-  }, [isCreateCategory, isUpdateCategory]);
+  }, [isCreateCategory, isUpdateCategory])
 
   const fetchCategories = async () => {
     await axios.get(`http://localhost:8000/api/categories`).then(({ data }) => {
-      setCategories(data.categories);
-    });
-  };
+      setCategories(data.categories)
+    })
+  }
 
   const openCreateCategory = () => {
-    setisCreateCategory(true);
-  };
+    setisCreateCategory(true)
+  }
 
   const closeCreateCategory = () => {
-    setisCreateCategory(false);
-  };
+    setisCreateCategory(false)
+  }
 
   const openUpdateCategory = async (id, sticker, category) => {
-    setId(id);
+    setId(id)
     console.log("0.1 Set id:", id)
-    setSticker(sticker);
+    setSticker(sticker)
     console.log("0.2 Set sticker:", sticker)
-    setCategory(category);
+    setCategory(category)
     console.log("0.3 Set category", category)
-    setisUpdateCategory(true);
-  };
+    setisUpdateCategory(true)
+  }
 
   const closeUpdateCategory = () => {
-    setisUpdateCategory(false);
-  };
+    setisUpdateCategory(false)
+  }
 
   return (
     <>
@@ -67,23 +67,23 @@ const Category = () => {
           <div className="category-card-body">
             {categories.length > 0
               ? categories.map((category) => (
-                  <div
-                    key={category.id}
-                    className="category-unit"
-                    onClick={() => openUpdateCategory(
-                      category.id,
-                      category.sticker,
-                      category.category
-                    )}
-                  >
-                    <div className="sticker">
-                      <h2>{category.sticker}</h2>
-                    </div>
-                    <div className="category">
-                      <h2>{category.category}</h2>
-                    </div>
+                <div
+                  key={category.id}
+                  className="category-unit"
+                  onClick={() => openUpdateCategory(
+                    category.id,
+                    category.sticker,
+                    category.category
+                  )}
+                >
+                  <div className="sticker">
+                    <h2>{category.sticker}</h2>
                   </div>
-                ))
+                  <div className="category">
+                    <h2>{category.category}</h2>
+                  </div>
+                </div>
+              ))
               : null}
             <div className="category-unit" onClick={openCreateCategory}>
               <div className="sticker">
@@ -100,4 +100,4 @@ const Category = () => {
   );
 };
 
-export default Category;
+export default Category

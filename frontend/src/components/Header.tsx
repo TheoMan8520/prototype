@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import "../css/header.css";
 
 interface Props {
-  text: string;
+  text: string
 }
 
 const Header = ({ text }: Props) => {
@@ -18,4 +18,4 @@ const Header = ({ text }: Props) => {
   );
 };
 
-export default Header;
+export default Header

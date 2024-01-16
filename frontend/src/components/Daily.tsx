@@ -45,6 +45,7 @@ const Daily = () => {
       .then(({ data }) => {
         setRecords(data.records)
         setCategories(data.categories)
+        // setPresets(data.presets)
       })
   }
 

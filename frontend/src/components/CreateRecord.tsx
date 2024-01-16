@@ -55,7 +55,6 @@ const CreateRecord = ({
     formData.append("year", year)
     formData.append("sticker", sticker)
     formData.append("category", category)
-    // formData.append("preset", preset)
 
     if (preset !== "") {
       formData.append("preset", preset)

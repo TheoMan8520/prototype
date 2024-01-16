@@ -106,6 +106,14 @@ const UpdateRecord = ({
   useEffect(() => {
     if (firstRender && id) {
       setUp();
+      if (!sticker) {
+        if (categories.length === 0) {
+          setSticker("📝")
+        } else {
+          setCategory(categories[0].category)
+          setSticker(categories[0].sticker)
+        }
+      }
       setFirstRender(false)
     }
     syncSticker()
@@ -126,7 +134,7 @@ const UpdateRecord = ({
       })
       .catch(({ response: { data } }) => {
         Swal.fire({
-          text: "An error occurred while processing the request.",
+          text: data.message,
           icon: "error",
         })
       })

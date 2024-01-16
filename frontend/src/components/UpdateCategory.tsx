@@ -72,6 +72,27 @@ const UpdateCategory = ({
     onRequestClose()
   }
 
+  const deleteCategory = async (e) => {
+    e.preventDefault()
+    await axios
+      .delete(`http://localhost:8000/api/categories/${id}`)
+      .then(({ data }) => {
+        Swal.fire({
+          icon: "success",
+          text: data.message,
+        })
+        // setFirstRender(true)
+        // onRequestClose()
+        closeModal()
+      })
+      .catch(({ response: { data } }) => {
+        Swal.fire({
+          text: data.message,
+          icon: "error",
+        })
+      })
+  }
+
   useEffect(() => {
     setSticker(stickerIn)
     setCategory(categoryIn)
@@ -117,6 +138,9 @@ const UpdateCategory = ({
         <div className="buttons">
           <button className="button delete" onClick={closeModal}>
             CANCEL
+          </button>
+          <button className="button delete" onClick={deleteCategory}>
+            DELETE
           </button>
           <button
             className="button save"

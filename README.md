@@ -1,4 +1,4 @@
-#Weekly web application
+# Weekly web application
 
 **I** always digitally write down what I have to do, what I have done, how I feel about specific occations during a day and others things I could think of and that worth to be written. There're templates I made for myself to write down those records in each day and for every record, I would put a sticker infront of each just to be an identifier telling what kind of recod is this. 
 
